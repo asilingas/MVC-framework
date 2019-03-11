@@ -2,7 +2,9 @@
   padding-right: 15px;
   color: white;
 }
-
+#loginAlert {
+  display: none;
+}
 html {
   position: relative;
   min-height: 100%;
