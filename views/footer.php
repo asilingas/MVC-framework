@@ -83,6 +83,20 @@
           }
         })
       })
+      $("#postTweetButton").click(function() {
+        $.ajax({
+          type: "POST",
+          url: "actions.php?action=postTweet",
+          data: "tweetContent=" + $('#tweetContent').val(),
+          success: function(result) {
+            if (result == "1") {
+              $("#tweetSuccess").show();
+            } else if (result != "") {
+              $("#tweetFail").html(result).show();
+            }
+          }
+        })
+      })
     </script>
   </body>
 </html>

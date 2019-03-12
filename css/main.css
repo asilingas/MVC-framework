@@ -5,6 +5,9 @@
 #loginAlert {
   display: none;
 }
+#tweetSuccess, #tweetFail {
+  display: none;
+}
 .main-container {
   padding: 20px;
 }

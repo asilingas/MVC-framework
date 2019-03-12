@@ -50,6 +50,8 @@
         }
         $whereClause.= " user_id = ".$row['isFollowing'];
       }
+    } elseif ($type == 'your-tweets') {
+      $whereClause = "WHERE user_id = ".mysqli_real_escape_string($link, $_SESSION['id']);
     }
     $manoSQL = "SELECT * FROM tweets ".$whereClause." ORDER BY `date_time` DESC LIMIT 10";
     $result = mysqli_query($link, $manoSQL);
@@ -86,10 +88,12 @@
   {
     if (isset($_SESSION['id'])) {
       if ($_SESSION['id'] > 0) {
-        echo '<form">
+        echo '<div id="tweetSuccess" class="alert alert-success">Jūsų žinutė paskelbta!</div>
+              <div id="tweetFail" class="alert alert-danger"></div>
+              <div">
                 <textarea class="form-control mb-2 mr-sm-2" id="tweetContent"></textarea>
-                <button type="submit" class="btn btn-primary mb-2">Skelbti žinutę!</button>
-              </form>';
+                <button id="postTweetButton" class="btn btn-primary mb-2">Skelbti žinutę!</button>
+              </div>';
       }
     }
   }

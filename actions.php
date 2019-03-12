@@ -1,5 +1,6 @@
 <?php
   include('model/functions.php');
+
   if ($_GET['action'] == "loginSignup") {
     $error = "";
     if (!$_POST['email']) {
@@ -46,6 +47,7 @@
       exit();
     }
   }
+
   if ($_GET['action'] == 'toggleFollow') {
     $manoSQL = "SELECT * FROM isfollowing WHERE follower = ".mysqli_real_escape_string($link, $_SESSION['id'])." AND isFollowing = ".mysqli_real_escape_string($link, $_POST['userId'])." LIMIT 1";
     $results = mysqli_query($link, $manoSQL);
@@ -56,5 +58,16 @@
     } else {
       mysqli_query($link, "INSERT INTO isfollowing (follower, isFollowing) VALUES (".mysqli_real_escape_string($link, $_SESSION['id']).", ".mysqli_real_escape_string($link, $_POST['userId']).")");
       echo "2";
+    }
+  }
+
+  if ($_GET['action'] == 'postTweet') {
+    if (!$_POST['tweetContent']) {
+      echo "Jūsų žinutė tusčia!";
+    } elseif (strlen($_POST['tweetContent']) > 140) {
+      echo "Jūsų žinutė yra per ilga!";
+    } else {
+      mysqli_query($link, "INSERT INTO tweets (`tweet`, `user_id`, `date_time`) VALUES ('".mysqli_real_escape_string($link, $_POST['tweetContent'])."', " .mysqli_real_escape_string($link, $_SESSION['id']).", NOW())");
+      echo "1";
     }
   }
