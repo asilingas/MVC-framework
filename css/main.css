@@ -5,6 +5,21 @@
 #loginAlert {
   display: none;
 }
+.main-container {
+  padding: 20px;
+}
+.time {
+  color: lightgrey;
+}
+.tweet {
+  border: 1px solid grey;
+  border-radius: 5px;
+  padding: 5px;
+  margin: 5px;
+}
+.toggleFollow {
+  color: white !important;
+}
 html {
   position: relative;
   min-height: 100%;

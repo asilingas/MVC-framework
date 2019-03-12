@@ -42,7 +42,7 @@
     </div>
     <script type="text/javascript">
       $('#toggleLogin').click(function() {
-        if ($("#loginActive").val() == "1"){
+        if ($("#loginActive").val() == "1") {
             $('#loginActive').val("0");
             $('#loginModalTitle').html("Sign Up");
             $('#loginSignupButton').html("Sign Up");
@@ -64,6 +64,21 @@
               window.location.assign("index.php");
             } else {
               $('#loginAlert').html(result).show();
+            }
+          }
+        })
+      })
+      $(".toggleFollow").click(function() {
+        let id = $(this).attr("data-userId");
+        $.ajax({
+          type: "POST",
+          url: "actions.php?action=toggleFollow",
+          data: "userId=" + id,
+          success: function(result) {
+            if (result == "1") {
+              $("a[data-userId='" + id + "']").html("Sekti");
+            } else if (result == "2") {
+              $("a[data-userId='" + id + "']").html("Nebesekti");
             }
           }
         })
