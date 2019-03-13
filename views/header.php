@@ -19,15 +19,17 @@
 
       <div class="collapse navbar-collapse" id="navbarSupportedContent">
         <ul class="navbar-nav mr-auto">
-          <li class="nav-item">
-            <a class="nav-link" href="?page=timeline">Jūsų sekamų žmonių žinutės</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="?page=your-tweets">Jūsų žinutės</a>
-          </li>
-          <li class="nav-item">
-            <a class="nav-link" href="?page=public-profiles">Žmonių profiliai</a>
-          </li>
+          <?php if (isset($_SESSION['id'])): ?>
+            <li class="nav-item">
+              <a class="nav-link" href="?page=timeline">Jūsų sekamų žmonių žinutės</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="?page=your-tweets">Jūsų žinutės</a>
+            </li>
+            <li class="nav-item">
+              <a class="nav-link" href="?page=public-profiles">Žmonių profiliai</a>
+            </li>
+          <?php endif; ?>
         </ul>
         <div class="form-inline my-2 my-lg-0">
           <?php if (isset($_SESSION['id'])) { ?>

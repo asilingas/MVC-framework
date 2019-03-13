@@ -52,6 +52,15 @@
       }
     } elseif ($type == 'your-tweets') {
       $whereClause = "WHERE user_id = ".mysqli_real_escape_string($link, $_SESSION['id']);
+    } elseif ($type == 'search') {
+      echo "<p>'".mysqli_real_escape_string($link, $_GET['q'])."' paieškos rezultatai:</p>";
+      $whereClause = "WHERE tweet LIKE '%".mysqli_real_escape_string($link, $_GET['q'])."%'";
+    } elseif (is_numeric($type)) {
+      $userQuery = "SELECT * FROM users WHERE id = ".mysqli_real_escape_string($link, $type)." LIMIT 1";
+      $userQueryResult = mysqli_query($link, $userQuery);
+      $user = mysqli_fetch_assoc($userQueryResult);
+      echo "<h2>{$user['email']} žinutės</h2>";
+      $whereClause = "WHERE user_id = ".mysqli_real_escape_string($link, $_GET['user_id']);
     }
     $manoSQL = "SELECT * FROM tweets ".$whereClause." ORDER BY `date_time` DESC LIMIT 10";
     $result = mysqli_query($link, $manoSQL);
@@ -62,15 +71,17 @@
         $userQuery = "SELECT * FROM users WHERE id = ".mysqli_real_escape_string($link, $row['user_id'])." LIMIT 1";
         $userQueryResult = mysqli_query($link, $userQuery);
         $user = mysqli_fetch_assoc($userQueryResult);
-        echo "<div class='tweet'><p>{$user['email']} <span class='time'>".time_since(time() - strtotime($row['date_time']))." ago</span>:</p>";
+        echo "<div class='tweet'><a href=?page=public-profiles&user_id={$user['id']}><p>{$user['email']}</a> <span class='time'>".time_since(time() - strtotime($row['date_time']))." ago</span>:</p>";
         echo "<p>{$row['tweet']}</p>";
-        echo "<p><a class='btn btn-primary toggleFollow' data-userId='{$row['user_id']}'>";
-        $isFollowingQuery = "SELECT * FROM isfollowing WHERE follower = ".mysqli_real_escape_string($link, $_SESSION['id'])." AND isFollowing = ".mysqli_real_escape_string($link, $row['user_id'])." LIMIT 1";
-        $isFollowingQueryResult = mysqli_query($link, $isFollowingQuery);
-        if (mysqli_num_rows($isFollowingQueryResult) > 0) {
-          echo "Nebesekti";
-        } else {
-          echo "Sekti";
+        if (isset($_SESSION['id'])) {
+          echo "<p><a class='btn btn-primary toggleFollow' data-userId='{$row['user_id']}'>";
+          $isFollowingQuery = "SELECT * FROM isfollowing WHERE follower = ".mysqli_real_escape_string($link, $_SESSION['id'])." AND isFollowing = ".mysqli_real_escape_string($link, $row['user_id'])." LIMIT 1";
+          $isFollowingQueryResult = mysqli_query($link, $isFollowingQuery);
+          if (mysqli_num_rows($isFollowingQueryResult) > 0) {
+            echo "Nebesekti";
+          } else {
+            echo "Sekti";
+          }
         }
         echo "</a></p></div>";
       }
@@ -78,10 +89,11 @@
   }
   function displaySearch()
   {
-    echo '<div class="form-inline">
-            <input type="text" class="form-control mb-2 mr-sm-2" id="search" placeholder="Paieška">
-            <button class="btn btn-primary mb-2">Paieška</button>
-          </div>';
+    echo '<form class="form-inline">
+            <input type="hidden" name="page" value="search">
+            <input type="text" name="q" class="form-control mb-2 mr-sm-2" id="search" placeholder="Paieška">
+            <button type="submit" class="btn btn-primary mb-2">Paieška</button>
+          </form>';
   }
 
   function displayTweetBox()
@@ -95,5 +107,15 @@
                 <button id="postTweetButton" class="btn btn-primary mb-2">Skelbti žinutę!</button>
               </div>';
       }
+    }
+  }
+
+  function displayUsers()
+  {
+    global $link;
+    $manoSQL = "SELECT * FROM users LIMIT 20";
+    $result = mysqli_query($link, $manoSQL);
+    while ($row = mysqli_fetch_assoc($result)) {
+      echo "<p><a href='?page=public-profiles&user_id={$row['id']}'>{$row['email']}</a></p>";
     }
   }
